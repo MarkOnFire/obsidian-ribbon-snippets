@@ -1,0 +1,80 @@
+/* Ribbon Snippets - Settings UI */
+
+.ribbon-snippet-item {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+
+.ribbon-snippet-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.ribbon-snippet-header-icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-accent);
+}
+
+.ribbon-snippet-header-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ribbon-snippet-header-name {
+  font-weight: 600;
+  font-size: var(--font-ui-medium);
+}
+
+.ribbon-snippet-icon-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-left: 8px;
+  border-radius: 4px;
+  background: var(--background-modifier-hover);
+}
+
+.ribbon-snippet-icon-preview svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ribbon-snippet-textarea {
+  width: 100% !important;
+  min-height: 120px;
+  font-family: var(--font-monospace);
+  font-size: var(--font-ui-small);
+}
+
+.ribbon-snippet-actions .setting-item-control {
+  gap: 4px;
+}
+
+.ribbon-snippet-btn-disabled {
+  opacity: 0.3;
+}
+
+.ribbon-snippets-empty {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 24px 0;
+}
+
+.ribbon-snippets-hint {
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  margin-top: 16px;
+  padding: 8px 12px;
+  background: var(--background-modifier-hover);
+  border-radius: 4px;
+}
