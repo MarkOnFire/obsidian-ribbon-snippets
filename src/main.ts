@@ -21,6 +21,7 @@ export const DEFAULT_SETTINGS: RibbonSnippetsSettings = {
 export default class RibbonSnippetsPlugin extends Plugin {
 	settings: RibbonSnippetsSettings;
 	private ribbonIcons: HTMLElement[] = [];
+	private commandIds: string[] = [];
 	private saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 	async onload() {
@@ -33,6 +34,7 @@ export default class RibbonSnippetsPlugin extends Plugin {
 	onunload() {
 		if (this.saveTimer) clearTimeout(this.saveTimer);
 		this.removeRibbonIcons();
+		this.removeCommands();
 	}
 
 	async loadSettings() {
@@ -44,12 +46,13 @@ export default class RibbonSnippetsPlugin extends Plugin {
 	}
 
 	/**
-	 * Persist settings AND refresh ribbon icons.
+	 * Persist settings AND refresh ribbon icons + commands.
 	 * Use for structural changes (add/remove/reorder snippets, icon changes).
 	 */
 	async saveSettings() {
 		await this.saveData(this.settings);
 		this.refreshRibbonIcons();
+		this.refreshCommands();
 	}
 
 	/**
@@ -86,23 +89,33 @@ export default class RibbonSnippetsPlugin extends Plugin {
 		}
 	}
 
-	// --- Command registration ---
+	// --- Command management (requires Obsidian ≥ 1.7.2 for removeCommand) ---
+
+	private removeCommands() {
+		for (const id of this.commandIds) {
+			this.removeCommand(id);
+		}
+		this.commandIds = [];
+	}
+
+	private refreshCommands() {
+		this.removeCommands();
+		this.registerCommands();
+	}
 
 	private registerCommands() {
 		for (const snippet of this.settings.snippets) {
+			const id = `insert-snippet-${snippet.id}`;
 			this.addCommand({
-				id: `insert-snippet-${snippet.id}`,
+				id,
 				name: `Insert: ${snippet.name}`,
 				editorCallback: (editor: Editor) => {
-					// Look up live settings so edits take effect without reload
 					const current = this.settings.snippets.find(s => s.id === snippet.id);
-					if (!current) {
-						new Notice('Snippet no longer exists. Reload the plugin to update commands.');
-						return;
-					}
+					if (!current) return;
 					this.insertSnippetInEditor(editor, current);
 				}
 			});
+			this.commandIds.push(id);
 		}
 	}
 

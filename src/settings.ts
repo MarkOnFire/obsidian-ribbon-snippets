@@ -52,11 +52,6 @@ export class RibbonSnippetsSettingTab extends PluginSettingTab {
 			this.renderSnippet(containerEl, snippets[i], i, snippets.length);
 		}
 
-		// Reload hint
-		containerEl.createEl('p', {
-			text: 'Note: After adding or removing snippets, reload the plugin (Settings → Community plugins → toggle off/on) to update command palette entries.',
-			cls: 'ribbon-snippets-hint'
-		});
 	}
 
 	private renderSnippet(
