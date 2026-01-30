@@ -80,9 +80,9 @@ export class RibbonSnippetsSettingTab extends PluginSettingTab {
 			.addText(text => text
 				.setPlaceholder('My Snippet')
 				.setValue(snippet.name)
-				.onChange(async (value) => {
+				.onChange((value) => {
 					snippet.name = value;
-					await this.plugin.saveSettings();
+					this.plugin.debouncedSave();
 				}));
 
 		// --- Icon with live preview ---
@@ -92,9 +92,9 @@ export class RibbonSnippetsSettingTab extends PluginSettingTab {
 			.addText(text => text
 				.setPlaceholder('file-text')
 				.setValue(snippet.icon)
-				.onChange(async (value) => {
+				.onChange((value) => {
 					snippet.icon = value;
-					await this.plugin.saveSettings();
+					this.plugin.debouncedSave();
 					this.setIconSafe(previewEl, value);
 				}));
 
@@ -133,9 +133,9 @@ export class RibbonSnippetsSettingTab extends PluginSettingTab {
 			.addTextArea(ta => {
 				ta.setValue(snippet.content)
 					.setPlaceholder('## My heading\nSome content...')
-					.onChange(async (value) => {
+					.onChange((value) => {
 						snippet.content = value;
-						await this.plugin.saveSettings();
+						this.plugin.debouncedSave();
 					});
 				ta.inputEl.rows = 10;
 				ta.inputEl.addClass('ribbon-snippet-textarea');

@@ -21,6 +21,7 @@ export const DEFAULT_SETTINGS: RibbonSnippetsSettings = {
 export default class RibbonSnippetsPlugin extends Plugin {
 	settings: RibbonSnippetsSettings;
 	private ribbonIcons: HTMLElement[] = [];
+	private saveTimer: ReturnType<typeof setTimeout> | null = null;
 
 	async onload() {
 		await this.loadSettings();
@@ -30,6 +31,7 @@ export default class RibbonSnippetsPlugin extends Plugin {
 	}
 
 	onunload() {
+		if (this.saveTimer) clearTimeout(this.saveTimer);
 		this.removeRibbonIcons();
 	}
 
@@ -41,9 +43,26 @@ export default class RibbonSnippetsPlugin extends Plugin {
 		}
 	}
 
+	/**
+	 * Persist settings AND refresh ribbon icons.
+	 * Use for structural changes (add/remove/reorder snippets, icon changes).
+	 */
 	async saveSettings() {
 		await this.saveData(this.settings);
 		this.refreshRibbonIcons();
+	}
+
+	/**
+	 * Debounced persist-only save. Does NOT rebuild ribbon icons.
+	 * Use for text field edits (name, content) where rapid typing
+	 * would cause concurrent refreshRibbonIcons() calls, orphaning
+	 * DOM elements due to async race conditions.
+	 */
+	debouncedSave() {
+		if (this.saveTimer) clearTimeout(this.saveTimer);
+		this.saveTimer = setTimeout(() => {
+			this.saveData(this.settings);
+		}, 400);
 	}
 
 	// --- Ribbon icon management ---
